@@ -1,0 +1,124 @@
+
+<style>
+.chatFrame{
+    position:absolute;
+    border:1px solid purple;
+    width:45%;
+}
+
+.chatBox {
+    text-align:left;
+    width:90%;
+    height:400px;
+}
+#sayThisThing {
+    text-align:center;
+    width:90%;
+    height:80px;
+}
+
+</style>
+
+<script type="text/javascript">
+    var dataFromView = {};
+        dataFromView = <%-JSON.stringify(data)%>
+
+    var clientNick = undefined;
+
+    var clientIsConnected = false;
+
+    var disconnectFromChat = function(){
+        io.socket.disconnect()
+    };
+
+    var connectToChat = function(){
+        connectToIRC(function(connectionInfo){
+
+            io.socket.on('attendance',addAttendanceEventToChatBox);
+
+            io.socket.on('disconnect',function(){
+                console.log('Disconnected!');
+                io.socket.get('/chat/disconnect');
+                // window.location.href='/chat'
+            })
+
+            io.socket.on('newMessage',addMessageToChatBox);
+
+            io.socket.on('message',function(msgData){
+                console.log('reh',msgData);
+            });
+
+            clientNick = connectionInfo.name;
+
+            console.log('Connected to IRC as',clientNick)
+
+            $('.sendMessageButton').on('mouseup',sayThisThing);
+
+            $('#sayThisThing').on('keyup',function(event){
+                if(event.keyCode == 13){
+                    return sayThisThing();
+                }
+            })
+
+        })
+    }
+
+
+    window.onload = function(){
+        if (dataFromView.lastTenChatMessages){
+            dataFromView.lastTenChatMessages.reverse().forEach(addMessageToChatBox)
+        }
+
+        $('#searchForThis').on('keyup',function(event){
+            if(event.keyCode == 13){
+                sendSearchQuery();
+            }
+        });
+
+
+    };
+
+    var addAttendanceEventToChatBox = function(msgData){
+        console.log('Attendance Data:',msgData);
+        $('.chatBox').append('<div><span class="ircName">'+msgData.nick+' '+msgData.type+'ed #sailsjs</span> - <span class="ircMessage">'+msgData.message+'</span></div>')
+        if (msgData.type === 'depart' && msgData.nick === clientNick){
+            alert(clientNick+'! Youve been disconnected for inactivity')
+            io.socket.disconnect();
+        }
+
+    };
+    var addMessageToChatBox = function(msgData){
+        $('.chatBox').append('<div><span class="ircName">'+msgData.from+'</span>: <span class="ircMessage">'+msgData.message+'</span></div>')
+
+    };
+    var sayThisThing = function(){
+        console.log('posting messsage to IRC',$('#sayThisThing').val())
+        io.socket.get('/chat/speak',{message:$('#sayThisThing').val()});
+        $('#sayThisThing').val('')
+    };
+    var connectToIRC = function(cb){
+        io.socket.get('/chat/connect',function(serverResponse){
+            return cb(serverResponse)
+        });
+    };
+
+</script>
+
+// already ported
+/*<div class="pageContainer">
+    <div class="chatFrame">
+        <div class="chatBox">
+
+        </div>
+        <div class="speak">
+
+                <input type="text" class="chatInputBox" id="sayThisThing"><br>
+                <input type="button" class="sendMessageButton" value="Say Something">
+                <input type="button" onclick="connectToChat()" value="Connect To Chat">
+                <input type="button" onclick="disconnectFromChat()" value="Disconnect From Chat">
+
+        </div>
+    </div>
+
+</div>
+*/

@@ -1,0 +1,12 @@
+<div class="searchBoxMessage">{{searchStatus}}</div>
+<ul class="listOfGrams">
+	<li ng-repeat="gram in searchResults">{{gram.results.length}} Results for {{gram.name}}
+		<ul class="listOfResults">
+			<li ng-repeat="item in gram.results" class="searchResultItem" ng-class="{transcriptCenter: item.transcriptCenter}">
+				<span class="searchSender" ng-click="showDetails('user',item.sender)" ng-style="getUserColor(item.sender)">{{item.sender}}</span>: 
+				<span class="searchText">{{item.text}}</span> - 
+				<span class="showDetails" ng-click="showDetails('message',item.createdAt)">Go To</span>
+			</li>
+		</ul>
+	</li>
+</ul>

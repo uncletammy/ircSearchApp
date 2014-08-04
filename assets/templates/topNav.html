@@ -1,0 +1,3 @@
+<ul class='navLinks'>
+	<li ng-repeat="item in navItems" ng-class="{selectedButton: currentSection === item.templateName}" ng-click="intent.loadSubSection(item.templateName)">{{item.sectionName}}</li>
+</ul>

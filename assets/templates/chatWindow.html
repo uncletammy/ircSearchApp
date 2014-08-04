@@ -1,0 +1,12 @@
+<div class="chatBoxMessage">
+	<ul class="listOfChats">
+		<li ng-repeat="message in chatMessages">
+			<span class="chatSender" ng-click="showDetails('user',message.sender)" ng-style="getUserColor(message.sender)">
+				{{message.sender}}
+			</span>: 
+			<span class="chatText">{{message.text}}</span>
+		</li>
+	</ul>
+</div>
+
+

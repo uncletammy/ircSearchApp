@@ -1,0 +1,11 @@
+
+	<div class="searchContainer">
+		<form name="searchForm">
+		<input type="text" class="searchInputBox" id="searchForThis" ng-model="searchQuery" ng-keyup="sendSearchQuery(searchQuery,$event)" ng-click="searchQuery = ''"><br>
+		<input type="button" class="sendQueryButton" value="Find This Thing" ng-click="sendSearchQuery(searchQuery)">
+		</form>
+
+		<div class="searchBox" ng-include="'templates/searchResults.html'"></div>
+<!-- 		<div class="searchbox"></div> -->
+
+	</div>

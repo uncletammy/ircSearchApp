@@ -1,0 +1,14 @@
+
+	<div class="chatContainer">
+		<div ng-include="'templates/chatButtons.html'"></div>
+		<div class="chatBox" ng-include="'templates/chatWindow.html'"></div>
+		<div class="textAndNick">
+			<span class="showNick">
+				<div class="connectionInfo">
+					<img ng-src="{{connectedImageURL}}">{{chatNick}}
+				</div>
+			</span>
+			<input type="text" class="chatInputBox" id="chatForThis" ng-model="chatQuery" ng-keyup="sendChatQuery(chatQuery,$event)">
+		</div>
+		<input type="button" class="sendChatMessage" value="Say This Thing" ng-click="sendChatQuery(chatQuery)">
+	</div>
